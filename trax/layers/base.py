@@ -477,7 +477,8 @@ class Layer(object):
       # Note: By using rng_signature in place of an rng, we avoid computing and
       # permanently storing in global memory a large number of dropout masks.
       # TODO(jonni): Check if using an rng still carries this cost.
-      rng_signature = ShapeDtype((2,), np.uint32)
+      dummy_rng = math.random.get_prng(0)
+      rng_signature = ShapeDtype(dummy_rng.shape, dummy_rng.dtype)
       weight_signature = nested_map(signature, self.weights)
       forward_infer_shapes = math.abstract_eval(self.forward_with_state)
       return forward_infer_shapes(
